@@ -1,0 +1,15 @@
+import pandas as pd
+import numpy as np
+from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import FunctionTransformer, MinMaxScaler, StandardScaler, OneHotEncoder
+from sklearn.impute import SimpleImputer
+from sklearn.compose import ColumnTransformer
+from sklearn.pipeline import Pipeline
+from sklearn.model_selection import GridSearchCV
+from sklearn.linear_model import Lasso
+
+##Reading file, Converting dates to datetime format
+df = pd.read_csv("pls_fy18_state_pud18i.csv", parse_dates=['STARTDAT','ENDDATE'])
+
+##Drop columns that are territories/not states: Guam, American Samoa, Northern Mariana Islands & D.C.
+df = df.drop(df.index[[3,8,12,27]])
