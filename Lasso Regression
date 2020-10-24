@@ -55,3 +55,7 @@ print('best validation score ', model.best_score_,'\n')
 print('scoring method ', model.scorer_)
 
 print("Test set accuracy score: {:.7f}".format(model.score(X_test, y_test)))
+
+##best params  {'model__alpha': 2.5, 'model__max_iter': 1000, 'preprocess__num__scale': MinMaxScaler()}
+##best validation score  0.4985318926203382
+##scoring method  make_scorer(r2_score), Test set accuracy score: 0.9070174
