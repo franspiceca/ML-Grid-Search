@@ -13,3 +13,34 @@ df = pd.read_csv("pls_fy18_state_pud18i.csv", parse_dates=['STARTDAT','ENDDATE']
 
 ##Drop columns that are territories/not states: Guam, American Samoa, Northern Mariana Islands & D.C.
 df = df.drop(df.index[[3,8,12,27]])
+
+df = df[["STABR", "POPU_LSA", "POPU_ST", "CENTLIB", "BRANLIB", "BKMOB", "TOTSTAFF", "TOTINCM"]]
+df.head()
+
+continuous_features = ["POPU_LSA", "POPU_ST", "CENTLIB", "BRANLIB", "BKMOB", "TOTSTAFF"]
+discrete_features = ["STABR"]
+
+X = df[continuous_features + discrete_features]
+y = df["TOTINCM"]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
+
+num_transformer = Pipeline(steps=[('impute', SimpleImputer(strategy='median'))
+                                 ,('scale', MinMaxScaler())])
+
+cat_transformer = Pipeline(steps=[('impute', SimpleImputer(strategy='constant', fill_value='Missing'))
+                                 ,('enc', OneHotEncoder(sparse=False, handle_unknown='ignore'))])
+
+preprocessor = ColumnTransformer([('num', num_transformer,continuous_features)
+                                 ,('cat',cat_transformer,discrete_features)]
+                                ,remainder='passthrough')
+
+pipe = Pipeline(steps=[('preprocess', preprocessor), 
+                       ('model', Lasso())])
+
+parameters = {'preprocess__num__scale': [MinMaxScaler(), StandardScaler()],
+              'model__alpha': [1.0, 1.5, 2.0, 2.5],
+              'model__max_iter': [1000,2000]
+             }
+
+print("Parameter grid:\n{}".format(parameters),'\n')
