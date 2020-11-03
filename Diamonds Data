@@ -53,4 +53,13 @@ print("Parameter grid:\n{}".format(parameters),'\n')
 
 grid =  GridSearchCV(pipe, parameters, cv=5, return_train_score=True, scoring='r2', n_jobs=3)
 
+##Setting up my model to fit my grid search
+model = grid.fit(X_train, y_train)
 
+##Printing out the best scores for my model
+print('best params ',model.best_params_,'\n')
+print('best estimator ',model.best_estimator_,'\n')
+print('best validation score ', model.best_score_,'\n')
+print('scoring method ', model.scorer_)
+
+print("Test set accuracy score: {:.7f}".format(model.score(X_test, y_test)))
