@@ -42,3 +42,15 @@ preprocessor = ColumnTransformer([('num', num_transformer,continuous_features)
 
 pipe = Pipeline(steps=[('preprocess', preprocessor), 
                        ('model', Lasso())])
+                       
+##Setting up my grid search parameters
+parameters = {'preprocess__num__scale': [MinMaxScaler(), StandardScaler()],
+              'model__alpha': [1.0, 1.5, 2.0, 2.5],
+              'model__max_iter': [1000,2000]
+             }
+
+print("Parameter grid:\n{}".format(parameters),'\n')
+
+grid =  GridSearchCV(pipe, parameters, cv=5, return_train_score=True, scoring='r2', n_jobs=3)
+
+
